@@ -16,3 +16,6 @@ The following workflow is used to analyse _E.coli_ ribosome profiling data to es
 ## Calculating Average Codon Dwell Time by Fitting a Poisson Rate Parameter to Translation Time Data
 1. Python script `findingtau_allgenes.py` takes as input the nucleotide sequence of a codon of interest and calculates the translation time for every instance of that codon across all _E.coli_ genes.
 2. R script `findinglambda_time.R` fits the data to a Poisson distribution to estimate a rate parameter representing the average translation time of each codon. The script also visualises the results as a series of plots and applies the Kolmogorov-Smirnov test to compare the cumulative distribution functions of the observed data and the fitted Poisson distribution.
+
+# Author
+Isabella Hodgson
