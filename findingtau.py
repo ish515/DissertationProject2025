@@ -24,10 +24,10 @@ colnames = ['name', 'copy_num', 'length']
 
 gene_copy_num = pd.read_csv('gene_counts.dat', sep='\s+', names=colnames, header=None)
 
-## Merge dataframes by gene name
+# Merge dataframes by gene name
 df_merged = genes.merge(gene_copy_num[['name', 'copy_num', 'length']])
 
-## For ease, rename df_merged and use throughout
+# For ease, rename df_merged and use throughout
 genes = df_merged
 
 # Divide code into forward and reverse genes
@@ -53,7 +53,7 @@ print(genes[genes["name"] == name])
 # Change index
 i = 5
 
-### For forward genes
+############ For forward genes ##########
 #### Pull out the start and stop positions for the gene
 ##start = int(forward.Start[i])
 ##stop = int(forward.Stop[i])
@@ -71,8 +71,9 @@ i = 5
 ##
 ##for k in range(len(gene_read_numbers)):
 ##        read_number_list.append(float(gene_read_numbers.iloc[k][1]))
+#########################################
                 
-# For reverse genes
+########## For reverse genes ##########
 ## Pull out the start and stop positions for the gene
 start = int(reverse.Start[i])
 stop = int(reverse.Stop[i])
@@ -89,8 +90,8 @@ gene_seq_codons = [reverse_comp_gene_seq[j:j+3] for j in range(0, len(reverse_co
 ## Reverse the order of the numbers of reads
 reverse_read_numbers = list(reversed(read_numbers.read_num))
 
-## Sum ribosome density of each codon of the gene for plus1 strand
-### Subset the plus strand RP data by gene position
+## Sum ribosome density of each codon of the gene
+### Subset the RP data by gene position
 gene_read_numbers = reverse_read_numbers[start-1:stop]
 
 ## Pull out just the read values
@@ -98,38 +99,13 @@ read_number_list = []
 
 for k in range(len(gene_read_numbers)):
         read_number_list.append(float(gene_read_numbers[k]))
+#######################################
 
+########## For all genes ##########
 ## Take the max of the group of three (one codon)
 codons = [read_number_list[i:i+3] for i in range(0, len(read_number_list), 3)]
 
 codons_max = list(map(max, codons))
-
-## Plot histograms of the max of read number per codon
-plt.hist(codons_max, bins=30, color='Blue', edgecolor='black')
-plt.title('Frequency of Read Number per Codon')
-plt.xlabel('Read Number')
-plt.ylabel('Frequency')
-
-### Save the figure
-file_name = 'read_num_hist_gene_'+str(name)+'.png'
-plt.savefig(file_name)
-
-## Clear the axes
-plt.cla()
-
-## Plot read number for each codon across the length of the gene
-x = range(len(codons_max))
-fig, ax = plt.subplots()
-ax.plot(x, codons_max)
-
-ax.set(xlabel='Codon Number', ylabel='Reads on Codon', title="Number of Reads at Each Codon")
-
-## Save the figure
-file_name = 'read_num_gene_'+str(name)+'.png'
-fig.savefig(file_name)
-
-## Clear the axes
-plt.cla()
 
 # Calculate average translation time of each codon in the gene
 ## Sum read numbers per codon across the entire gene
@@ -141,39 +117,9 @@ codons_max_over_sum = [x / summed_max for x in codons_max]
 ## Multiply by T for that gene
 tau = [x * int(T[i]) for x in codons_max_over_sum]
 
-# Plot tau across the length of the gene
-x = range(len(tau))
-fig, ax = plt.subplots()
-ax.plot(x, tau)
-plt.xlim(0,200)
-plt.ylim(0,5)
-
-ax.set(xlabel='Codon Number', ylabel='Average Translation Time', title="Average Translation Time at Each Codon")
-
-## Save the figure
-file_name = 'tau_gene_'+str(name)+'.png'
-fig.savefig(file_name)
-
-## Save the data to file
+# Save the data to file
 file_name = 'tau_gene_'+str(name)+'_data.csv'
 np.savetxt(file_name,
            tau,
            delimiter=", ",
            fmt='% s')
-
-## Clear the axes
-plt.cla()
-
-# Plot histogram of tau
-plt.hist(codons_max, bins=30, color='Blue', edgecolor='black')
-plt.title('Frequency of Average Translation Times')
-plt.xlabel('Average translation time')
-plt.ylabel('Frequency')
-
-### Save the figure
-file_name = 'tau_hist_gene_'+str(name)+'.png'
-plt.savefig(file_name)
-
-## Clear the axes
-plt.cla()
-
