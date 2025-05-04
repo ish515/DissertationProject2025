@@ -54,7 +54,7 @@ Y_index_f = []
 for i in range(len(forward)):
                Y_index_f.append(forward.len.iloc[i] + forward.pos.iloc[i])
 
-## Remove Y_index values > len(sequence)
+# Remove Y_index values > len(sequence)
 Y_index_f_inseq = [i for i in Y_index_f if i < len(sequence)-2]
 
 ###### REVERSE FRAGMENTS ######
@@ -65,10 +65,11 @@ Y_index_r = []
 for i in range(len(reverse)):
                Y_index_r.append(reverse.pos.iloc[i])
 
-## Remove Y_index values > len(sequence)
+# Remove Y_index values > len(sequence)
 Y_index_r_inseq = [i for i in Y_index_r if i < len(sequence)-2]
 
-## Subset the two nucleotides before cleavage
+# Subset the two nucleotides before cleavage
+## For forward fragments
 beforef = []
 x1f = []
 Yf = []
@@ -80,6 +81,7 @@ for x in Y_index_f_inseq:
         x1f.append(x1)
         Yf.append(Y)
 
+## For reverse fragments
 beforer = []
 x1r = []
 Yr = []
@@ -95,18 +97,19 @@ for x in Y_index_r_inseq:
         x1r.append(str(complementx1))
         Yr.append(str(complementY))
 
-## Append the two lists together
+# Append the two lists together
 before = beforef + beforer
 x1 = x1f + x1r
 Y = Yf + Yr
 
-## Divide the lists up into pairs of nucleotides
+# Divide the lists up into pairs of nucleotides
 before_pairs = [before[m:m+2] for m in range(0, len(before), 2)]
 
-## Join nucleotides into single string
+# Join nucleotides into single string
 before_pairs_tg = [''.join(before_pairs[x]) for x in range(len(before_pairs))]
 
-## Subset the two nucleotides after cleavage
+# Subset the two nucleotides after cleavage
+## For forward fragments
 afterf = []
 Zf = []
 x2f = []
@@ -118,6 +121,7 @@ for x in Y_index_f_inseq:
         Zf.append(Z)
         x2f.append(x2)
 
+## For reverse fragments
 afterr = []
 Zr = []
 x2r = []
@@ -133,15 +137,15 @@ for x in Y_index_r_inseq:
         Zr.append(str(complementZ))
         x2r.append(str(complementx2))
 
-## Append the two lists together
+# Append the two lists together
 after = afterf + afterr
 Z = Zf + Zr
 x2 = x2f + x2r
 
-## Divide the lists up into pairs of nucleotides
+# Divide the lists up into pairs of nucleotides
 after_pairs = [after[m:m+2] for m in range(0, len(after), 2)]
 
-## Join nucleotides into single string
+# Join nucleotides into single string
 after_pairs_tg = [''.join(after_pairs[x]) for x in range(len(after_pairs))]
 
 # Count the number of occurrences of each possible sequence of nucleotides
@@ -263,17 +267,17 @@ for i in range(len(genes)):
                 ## Append list to full list
                 pairs.append(gene_pairs)
 
-## Create a flat list from the list of lists
+# Create a flat list from the list of lists
 flat_pairs = [
         x
         for xs in pairs
         for x in xs
 ]
 
-## Divide the lists up into pairs of nucleotides
+# Divide the lists up into pairs of nucleotides
 pairs_paired = [flat_pairs[m:m+2] for m in range(0, len(flat_pairs), 2)]
 
-## Join nucleotides into single string
+# Join nucleotides into single string
 pairs_tg = [''.join(pairs_paired[x]) for x in range(len(pairs_paired))]
 
 # Count the number of occurrences of each possible sequence of nucleotides
